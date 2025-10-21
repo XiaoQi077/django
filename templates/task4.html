@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>子任务一 车间环境监测与调节</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="main-box">
+                <div id="chart1" style="height: 240px">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="main-box">
+                <div id="chart2" style="height: 240px">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/echarts.min.js"></script>
+<script>
+  function getDataLine() {
+    $.get("/sub04/getLineData", function (res) {
+
+      data = JSON.parse(res)
+      let x = data.x_list
+      let y_avg_temp = data.y_avg_temp
+      let y_max_temp = data.y_max_temp
+      let y_avg_humi = data.y_avg_humi
+      let y_max_humi = data.y_max_humi
+      let chart = echarts.init(document.getElementById('chart1'))
+      //TODO 参考/static/examples/line.js中的折线图配置示例，进行图表参数配置，图标题为"温湿度历史曲线图"
+      let options = {
+          title: {
+            text: '温湿度历史曲线图'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross',
+              label: {
+                backgroundColor: '#6a7985'
+              }
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'category',
+              boundaryGap: false,
+              data: x
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value'
+            }
+          ],
+          series: [
+            {
+              name: '平均温度',
+              type: 'line',
+              stack: 'Total',
+              emphasis: {
+                focus: 'series'
+              },
+              data: y_avg_temp
+            },
+            {
+              name: '最大温度',
+              type: 'line',
+              stack: 'Total',
+              emphasis: {
+                focus: 'series'
+              },
+              data: y_max_temp
+            },
+            {
+              name: '平均湿度',
+              type: 'line',
+              stack: 'Total',
+              emphasis: {
+                focus: 'series'
+              },
+              data: y_avg_humi
+            },
+            {
+              name: '最大湿度',
+              type: 'line',
+              stack: 'Total',
+              emphasis: {
+                focus: 'series'
+              },
+              data: y_max_humi
+            },
+          ]
+        };
+      chart.setOption(options)
+    })
+  }
+
+  function getDataBar() {
+    $.get("/sub04/getBarData", function (res) {
+      data = JSON.parse(res)
+      let x = data.x_list
+      let y_smoke_count = data.y_smoke_count
+      let y_body_count = data.y_body_count
+      let chart = echarts.init(document.getElementById('chart2'))
+      //TODO 参考/static/examples/bar.js中的柱状图配置示例，进行图表参数配置，图标题为"历史报警对比图"
+      let option = {
+          title: {
+            text: '历史报警对比图'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+          },
+          xAxis: {
+            type: 'category',
+            data: x
+          },
+          series: [
+            {
+              name: '人感报警次数',
+              type: 'bar',
+              data: y_body_count
+            },
+            {
+              name: '烟感报警次数',
+              type: 'bar',
+              data: y_smoke_count
+            }
+          ]
+        };
+      chart.setOption(option)
+    })
+  }
+
+  window.onload = function () {
+    getDataLine()
+    getDataBar()
+    //TODO 编写计时器，每1分钟获取图表最新数据
+    window.setInterval(getDataLine, 60000)
+    window.setInterval(getDataBar, 60000)
+  }
+
+</script>
+</body>
+</html>

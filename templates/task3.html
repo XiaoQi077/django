@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>子任务一 车间环境监测与调节</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="main-box">
+                <div class="item">
+                    <h3>车间流水线设备控制</h3>
+                </div>
+                <div class="item"> 传送带状态：<span id="data_smoke"></span></div>
+                <div class="item"> 控制：
+                    <button onclick="setStatus([0,1])" class="btn btn-sm btn-success">正转</button>
+                    <button onclick="setStatus([0,0])" class="btn btn-sm btn-success">停止</button>
+                    <button onclick="setStatus([1,0])" class="btn btn-sm btn-success">反转</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+  function getData() {
+    $.get("/sub03/getData", function (res) {
+      data = JSON.parse(res)
+      //TODO 判断传送带状态，并将传送带状态显示在id为data_smoke的span中，状态分别为正传、反转、已停止
+      let status = '已停止'
+      if (data[0] == 1) {
+          status = '反转'
+      }
+      if (data[1] == 1) {
+          status = '正转'
+      }
+      if (data[0] == 0 && data[1] == 1) {
+          status = '已停止'
+      }
+      document.getElementById("data_smoke").innerText = status
+    })
+  }
+
+  function setStatus(flag) {
+    $.post("/sub03/setData", {flag: flag})
+  }
+  window.onload = function () {
+    getData()
+  }
+
+</script>
+</body>
+</html>

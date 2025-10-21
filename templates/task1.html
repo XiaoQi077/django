@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>子任务一 车间环境监测与调节</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="main-box">
+                <div class="item">
+                    <h3>车间环境监测面板</h3>
+                </div>
+                <div class="item"> 二氧化碳：<span id="data1"></span>ppm</div>
+                <div class="item"> 有机气态物：<span id="data2"></span>μg/m³</div>
+                <div class="item"> 甲醛：<span id="data3"></span>μg/m³</div>
+                <div class="item"> PM2.5：<span id="data4"></span>μg/m³</div>
+                <div class="item"> 湿度：<span id="data5"></span>%</div>
+                <div class="item"> 温度：<span id="data6"></span>℃</div>
+                <div class="item"> PM10：<span id="data7"></span>μg/m³</div>
+                <div class="item"> PM1：<span id="data8"></span>μg/m³</div>
+                <div class="item"> 光照度：<span id="data9"></span>lux</div>
+                <div class="item"> 噪声：<span id="data10"></span>dB</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+  function getData() {
+    $.get("/sub01/getData", function (res) {
+        data = JSON.parse(res)
+        $("#data1").text(data[0])
+        $("#data2").text(data[1])
+        $("#data3").text(data[2])
+        $("#data4").text(data[3])
+        $("#data5").text(data[4])
+        $("#data6").text(data[5])
+        $("#data7").text(data[6])
+        $("#data8").text(data[7])
+        $("#data9").text(data[8])
+        $("#data10").text(data[10])
+    })
+  }
+
+  window.onload = function () {
+    getData()
+    //TODO 编写计时器，每三秒执行getData获取最新数据
+    window.setInterval(getData, 3000)
+  }
+
+</script>
+</body>
+</html>
