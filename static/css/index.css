@@ -1,0 +1,18 @@
+body {
+    min-width: 100vw;
+    min-height: 100vh;
+    background: #162151;
+}
+.main-box{
+    width: 100%;
+    box-shadow: 1px 1px 8px #DDDDDD;
+    margin: 16px 0;
+    border-radius: 16px;
+    background: #FFFFFFF0;
+    padding: 16px;
+}
+.main-box .item {
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #DDDDDD;
+}
